@@ -576,22 +576,25 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen">
 
-    <!-- Password Modal -->
+    <!-- License Modal -->
     <div id="auth-modal" class="modal-overlay hidden">
         <div class="modal-content">
-            <h2 class="text-xl font-bold mb-4" data-lang-key="passwordTitle">请输入密码</h2>
-            <p class="text-gray-600 mb-4" data-lang-key="passwordPrompt">请输入密码以继续使用。</p>
-            <input type="password" id="password-input" class="input-field mb-4" data-lang-placeholder="passwordPlaceholder">
-            <button id="submit-password" class="btn-primary" data-lang-key="confirmButton">确认</button>
-            <p id="password-error" class="text-red-500 text-sm mt-2 hidden" data-lang-key="passwordError">密码错误，请重试。</p>
+            <h2 class="text-xl font-bold mb-4" data-lang-key="licenseTitle">Enter License Key</h2>
+            <p class="text-gray-600 mb-4" data-lang-key="licensePrompt">Please enter your license key to continue.</p>
+            <input type="text" id="license-input" class="input-field mb-4" data-lang-placeholder="licensePlaceholder" placeholder="XXXX-XXXX-XXXX-XXXX">
+            <button id="submit-license" class="btn-primary" data-lang-key="activateButton">Activate</button>
+            <p id="license-error" class="text-red-500 text-sm mt-2 hidden" data-lang-key="licenseError">Invalid license key, please try again.</p>
+            <p class="text-xs text-gray-500 mt-4" data-lang-key="purchaseInfo">
+                Don't have a license key? Please visit our website to purchase a commercial license.
+            </p>
         </div>
     </div>
 
     <!-- Expired Modal -->
     <div id="expired-modal" class="modal-overlay hidden">
         <div class="modal-content">
-            <h2 class="text-xl font-bold mb-4 text-red-600" data-lang-key="expiredTitle">使用期限已到</h2>
-            <p class="text-gray-600" data-lang-key="expiredText">您的使用期限已过一个月。请联系管理员以获取新的访问权限。</p>
+            <h2 class="text-xl font-bold mb-4 text-red-600" data-lang-key="expiredTitle">License Expired</h2>
+            <p class="text-gray-600" data-lang-key="expiredText">Your license has expired. Please contact the administrator for a new license.</p>
         </div>
     </div>
     
@@ -610,38 +613,38 @@
             
             <div class="space-y-6">
                 <div class="control-section">
-                    <h2 data-lang-key="step1Title">第一步：上传产品信息</h2>
+                    <h2 data-lang-key="step1Title">Step 1: Upload Product Information</h2>
                     <div class="flex items-center">
                         <label for="excelFile" class="file-upload-label" data-lang-key="chooseFile">
-                            选择文件
+                            Choose File
                         </label>
                         <input type="file" id="excelFile" accept=".xlsx, .xls" class="hidden">
-                        <span id="excelFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                        <span id="excelFileName" class="file-info" data-lang-key="noFileChosen">No file chosen</span>
                     </div>
-                    <button id="downloadTemplateBtn" class="mt-2 w-full text-sm" data-lang-key="downloadTemplate">下载模板</button>
-                    <p class="mt-1 text-xs text-gray-500" data-lang-key="step1Desc">使用 'page' 列将产品分配到特定页面。工具将自动为每页1-9个产品调整布局。</p>
+                    <button id="downloadTemplateBtn" class="mt-2 w-full text-sm" data-lang-key="downloadTemplate">Download Template</button>
+                    <p class="mt-1 text-xs text-gray-500" data-lang-key="step1Desc">Use the 'page' column to assign products to specific pages. The tool will automatically adjust the layout for 1-9 products per page.</p>
                 </div>
 
                 <div class="control-section">
-                    <h2 data-lang-key="step2Title">第二步：上传产品图片</h2>
+                    <h2 data-lang-key="step2Title">Step 2: Upload Product Pictures</h2>
                      <div class="flex items-center">
                         <label for="imageFiles" class="file-upload-label" data-lang-key="chooseFiles">
-                            选择文件
+                            Choose Files
                         </label>
                         <input type="file" id="imageFiles" multiple accept="image/*" class="hidden">
-                        <span id="imageFilesName" class="file-info" data-lang-key="noFilesChosen">未选择文件</span>
+                        <span id="imageFilesName" class="file-info" data-lang-key="noFilesChosen">No files chosen</span>
                     </div>
-                    <p class="mt-1 text-xs text-gray-500" data-lang-key="step2Desc">图片文件名必须与'SKU'匹配。推荐尺寸800x800像素，最大2MB。</p>
+                    <p class="mt-1 text-xs text-gray-500" data-lang-key="step2Desc">Image filename must match 'SKU'. Recommended size 800x800 pixels, max 2MB.</p>
                 </div>
 
                 <div class="control-section">
-                    <h2 data-lang-key="step3Title">第三步：自定义配置</h2>
+                    <h2 data-lang-key="step3Title">Step 3: Customize Configuration</h2>
                     <input type="text" id="promoTime" class="input-field" data-lang-placeholder="promoDatePlaceholder" value="July 2025 Special">
                     
                     <div class="mt-2">
                         <div class="flex border-b border-gray-200">
-                            <div class="tab active" data-tab="promotion" data-lang-key="promoTab">促销</div>
-                            <div class="tab" data-tab="new-arrivals" data-lang-key="newArrivalsTab">新品</div>
+                            <div class="tab active" data-tab="promotion" data-lang-key="promoTab">Promotion</div>
+                            <div class="tab" data-tab="new-arrivals" data-lang-key="newArrivalsTab">New Arrivals</div>
                         </div>
                         
                         <div class="tab-content active" id="promotion-content">
@@ -655,72 +658,68 @@
                 </div>
 
                 <div class="control-section">
-                    <h2 data-lang-key="footerTitle">自定义页脚文本</h2>
+                    <h2 data-lang-key="footerTitle">Custom Footer Text</h2>
                     <div class="toolbar">
-                        <button class="toolbar-btn" data-command="bold" title="加粗"><b>B</b></button>
-                        <button class="toolbar-btn" data-command="italic" title="斜体"><i>I</i></button>
-                        <button class="toolbar-btn" data-command="underline" title="下划线"><u>U</u></button>
-                        <select id="fontNameSelect" class="toolbar-select" title="字体">
+                        <button class="toolbar-btn" data-command="bold" title="Bold"><b>B</b></button>
+                        <button class="toolbar-btn" data-command="italic" title="Italic"><i>I</i></button>
+                        <button class="toolbar-btn" data-command="underline" title="Underline"><u>U</u></button>
+                        <select id="fontNameSelect" class="toolbar-select" title="Font">
                             <option>Arial</option>
                             <option>Verdana</option>
                             <option>Georgia</option>
                             <option>Times New Roman</option>
                             <option>Courier New</option>
                         </select>
-                        <select id="fontSizeSelect" class="toolbar-select" title="字号">
-                            <option value="1">8pt</option>
-                            <option value="2">10pt</option>
-                            <option value="3" selected>12pt</option>
-                            <option value="4">14pt</option>
-                            <option value="5">18pt</option>
-                            <option value="6">24pt</option>
-                            <option value="7">36pt</option>
+                        <select id="fontSizeSelect" class="toolbar-select" title="Font Size">
+                            <option value="1" style="font-size: 8pt;">8pt</option>
+                            <option value="2" style="font-size: 10pt;">10pt</option>
+                            <option value="3" selected style="font-size: 12pt;">12pt</option>
                         </select>
-                        <input type="color" id="fontColorPicker" class="toolbar-color" title="字体颜色">
+                        <input type="color" id="fontColorPicker" class="toolbar-color" title="Font Color">
                     </div>
                     <div id="footerText" contenteditable="true" class="input-field rich-text-editor"><b>CTFOOD STOCKHOLM:</b> 08 581 658 80 | order.sth@ctfood.se | www.ctfood.se<br>Med reservation för slutförsäljning och tryckfel. Priserna är angivna svenska kronor exkl. moms. Leveransvillkor fritt vårt lager. Leveranstid: 1-3 dagar. Betalningsvillkor: 15 dagar netto efter godkänd sedvanlig kreditprovning</div>
                 </div>
 
                 <div class="control-section">
-                    <h2 data-lang-key="appearanceTitle">自定义外观</h2>
-                    <p class="mt-1 mb-2 text-xs text-gray-500" data-lang-key="appearanceDesc">提示：将原产地旗帜命名为国家名 (例如, Thailand.png)。其他图片：页眉Logo (400x100), 页眉背景 (推荐600x100), 页面背景 (1240x1754), 价格标签 (100x100), 页脚 (100x100)。</p>
+                    <h2 data-lang-key="appearanceTitle">Customize Appearance</h2>
+                    <p class="mt-1 mb-2 text-xs text-gray-500" data-lang-key="appearanceDesc">Tip: Name origin flags after the country (e.g., Thailand.png). Other images: Header Logo (400x100), Header BG (600x100 recommended), Page BG (1240x1754), Price Tag (100x100), Footer (100x100).</p>
                     <div class="space-y-2">
                         <div class="flex items-center">
-                            <label for="logoFile" class="file-upload-label" data-lang-key="headerLogo">页眉Logo</label>
+                            <label for="logoFile" class="file-upload-label" data-lang-key="headerLogo">Header Logo</label>
                             <input type="file" id="logoFile" accept="image/*" class="hidden">
-                            <span id="logoFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                            <span id="logoFileName" class="file-info" data-lang-key="noFileChosen">No file chosen</span>
                         </div>
                         <div class="flex items-center">
-                            <label for="headerBackgroundFile" class="file-upload-label" data-lang-key="headerBg">页眉背景</label>
+                            <label for="headerBackgroundFile" class="file-upload-label" data-lang-key="headerBg">Header BG</label>
                             <input type="file" id="headerBackgroundFile" accept="image/*" class="hidden">
-                            <span id="headerBackgroundFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                            <span id="headerBackgroundFileName" class="file-info" data-lang-key="noFileChosen">No file chosen</span>
                         </div>
                         <div class="flex items-center">
-                            <label for="backgroundFile" class="file-upload-label" data-lang-key="pageBg">页面背景</label>
+                            <label for="backgroundFile" class="file-upload-label" data-lang-key="pageBg">Page BG</label>
                             <input type="file" id="backgroundFile" accept="image/*" class="hidden">
-                            <span id="backgroundFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                            <span id="backgroundFileName" class="file-info" data-lang-key="noFileChosen">No file chosen</span>
                         </div>
                         <div class="flex items-center">
-                            <label for="priceTagFile" class="file-upload-label" data-lang-key="priceTagBg">价格标签背景</label>
+                            <label for="priceTagFile" class="file-upload-label" data-lang-key="priceTagBg">Price Tag BG</label>
                             <input type="file" id="priceTagFile" accept="image/*" class="hidden">
-                            <span id="priceTagFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                            <span id="priceTagFileName" class="file-info" data-lang-key="noFileChosen">No file chosen</span>
                         </div>
                         <div class="flex items-center">
-                            <label for="originFlagFiles" class="file-upload-label" data-lang-key="originFlags">原产地旗帜</label>
+                            <label for="originFlagFiles" class="file-upload-label" data-lang-key="originFlags">Origin Flags</label>
                             <input type="file" id="originFlagFiles" accept="image/*" class="hidden" multiple>
-                            <span id="originFlagFilesName" class="file-info" data-lang-key="noFilesChosen">未选择文件</span>
+                            <span id="originFlagFilesName" class="file-info" data-lang-key="noFilesChosen">No files chosen</span>
                         </div>
                         <div class="flex items-center">
-                            <label for="footerLogoFile" class="file-upload-label" data-lang-key="footerImage">页脚图片</label>
+                            <label for="footerLogoFile" class="file-upload-label" data-lang-key="footerImage">Footer Image</label>
                             <input type="file" id="footerLogoFile" accept="image/*" class="hidden">
-                            <span id="footerLogoFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                            <span id="footerLogoFileName" class="file-info" data-lang-key="noFileChosen">No file chosen</span>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="control-section">
-                <h2 data-lang-key="zoomTitle">缩放预览</h2>
+                <h2 data-lang-key="zoomTitle">Zoom Preview</h2>
                 <div class="flex items-center space-x-2">
                     <button id="zoomOutBtn" class="p-2 border rounded-md cursor-pointer">-</button>
                     <input type="range" id="zoomSlider" min="50" max="150" value="100" class="w-full cursor-pointer">
@@ -733,7 +732,7 @@
 
             <div class="print-button-container mt-6">
                  <button id="printBtn" class="btn-primary hidden" data-lang-key="printButton">
-                    打印或另存为PDF
+                    Print or Save as PDF
                 </button>
             </div>
         </div>
@@ -802,13 +801,14 @@
                 footerImage: "Footer Image",
                 zoomTitle: "Zoom Preview",
                 printButton: "Print or Save as PDF",
-                passwordTitle: "Enter Password",
-                passwordPrompt: "Please enter the password to continue.",
-                passwordPlaceholder: "Password",
-                confirmButton: "Confirm",
-                passwordError: "Incorrect password, please try again.",
-                expiredTitle: "Usage Period Expired",
-                expiredText: "Your one-month usage period has ended. Please contact the administrator for new access.",
+                licenseTitle: "Enter License Key",
+                licensePrompt: "Please enter your license key to continue.",
+                licensePlaceholder: "License Key",
+                activateButton: "Activate",
+                licenseError: "Invalid license key, please try again.",
+                expiredTitle: "License Expired",
+                expiredText: "Your license has expired. Please contact the administrator for a new license.",
+                purchaseInfo: "Don't have a license key? Please visit our website to purchase a commercial license.",
                 previewHeader: "Product Preview",
                 previewText: "Please upload the Excel and image files on the left to begin.",
                 statusParsingExcel: "Parsing Excel file...",
@@ -854,13 +854,14 @@
                 footerImage: "页脚图片",
                 zoomTitle: "缩放预览",
                 printButton: "打印或另存为PDF",
-                passwordTitle: "请输入密码",
-                passwordPrompt: "请输入密码以继续使用。",
-                passwordPlaceholder: "密码",
-                confirmButton: "确认",
-                passwordError: "密码错误，请重试。",
-                expiredTitle: "使用期限已到",
-                expiredText: "您的使用期限已过一个月。请联系管理员以获取新的访问权限。",
+                licenseTitle: "输入许可证密钥",
+                licensePrompt: "请输入您的许可证密钥以继续使用。",
+                licensePlaceholder: "许可证密钥",
+                activateButton: "激活",
+                licenseError: "许可证密钥无效，请重试。",
+                expiredTitle: "许可证已过期",
+                expiredText: "您的许可证已过期。请联系管理员以获取新的许可证。",
+                purchaseInfo: "还没有许可证密钥？请访问我们的网站购买商业授权。",
                 previewHeader: "产品预览",
                 previewText: "请在左侧上传Excel和图片文件以开始。",
                 statusParsingExcel: "正在解析Excel文件...",
@@ -906,13 +907,14 @@
                 footerImage: "Sidfotsbild",
                 zoomTitle: "Zooma förhandsgranskning",
                 printButton: "Skriv ut eller spara som PDF",
-                passwordTitle: "Ange lösenord",
-                passwordPrompt: "Vänligen ange lösenordet för att fortsätta.",
-                passwordPlaceholder: "Lösenord",
-                confirmButton: "Bekräfta",
-                passwordError: "Felaktigt lösenord, försök igen.",
-                expiredTitle: "Användningsperioden har löpt ut",
-                expiredText: "Din enmånads användningsperiod har löpt ut. Vänligen kontakta administratören för ny åtkomst.",
+                licenseTitle: "Ange licensnyckel",
+                licensePrompt: "Vänligen ange din licensnyckel för att fortsätta.",
+                licensePlaceholder: "Licensnyckel",
+                activateButton: "Aktivera",
+                licenseError: "Ogiltig licensnyckel, försök igen.",
+                expiredTitle: "Licensen har gått ut",
+                expiredText: "Din licens har gått ut. Vänligen kontakta administratören för en ny licens.",
+                purchaseInfo: "Har du ingen licensnyckel? Besök vår webbplats för att köpa en kommersiell licens。",
                 previewHeader: "Produktförhandsgranskning",
                 previewText: "Vänligen ladda upp Excel- och bildfilerna till vänster för att börja.",
                 statusParsingExcel: "Analyserar Excel-fil...",
@@ -971,25 +973,31 @@
 
         // --- END: Multi-language Support ---
 
-        // --- START: Authentication and Expiration Logic ---
+        // --- START: License-based Authentication Logic ---
         const authModal = document.getElementById('auth-modal');
         const expiredModal = document.getElementById('expired-modal');
         const appWrapper = document.getElementById('app-wrapper');
-        const passwordInput = document.getElementById('password-input');
-        const submitPasswordBtn = document.getElementById('submit-password');
-        const passwordError = document.getElementById('password-error');
+        const licenseInput = document.getElementById('license-input');
+        const submitLicenseBtn = document.getElementById('submit-license');
+        const licenseError = document.getElementById('license-error');
 
-        // IMPORTANT: Change this password to your desired password
-        const CORRECT_PASSWORD = 'CTF12345';
-        const EXPIRATION_DAYS = 30;
+        // License validation function
+        function validateLicense(licenseKey) {
+            // Simple validation - in a real application, this would be more complex
+            // and involve server-side verification
+            const licensePattern = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+            return licensePattern.test(licenseKey);
+        }
 
         function checkAccess() {
+            const licenseData = localStorage.getItem('licenseData');
             const activationDateStr = localStorage.getItem('activationDate');
 
-            if (activationDateStr) {
+            if (licenseData && activationDateStr) {
                 const activationDate = new Date(parseInt(activationDateStr));
                 const now = new Date();
                 const daysPassed = (now.getTime() - activationDate.getTime()) / (1000 * 3600 * 24);
+                const EXPIRATION_DAYS = 365; // 1 year expiration
 
                 if (daysPassed > EXPIRATION_DAYS) {
                     // Expired
@@ -1002,33 +1010,47 @@
                     loadInitialPreview();
                 }
             } else {
-                // First time use, ask for password
+                // First time use, ask for license
                 authModal.classList.remove('hidden');
                 appWrapper.classList.add('hidden');
             }
         }
 
-        submitPasswordBtn.addEventListener('click', () => {
-            if (passwordInput.value === CORRECT_PASSWORD) {
-                // Correct password, set activation date
+        submitLicenseBtn.addEventListener('click', () => {
+            const licenseKey = licenseInput.value.trim().toUpperCase();
+            
+            if (validateLicense(licenseKey)) {
+                // Valid license, set activation date
+                localStorage.setItem('licenseData', licenseKey);
                 localStorage.setItem('activationDate', Date.now().toString());
                 authModal.classList.add('hidden');
                 appWrapper.classList.remove('hidden');
-                passwordError.classList.add('hidden');
+                licenseError.classList.add('hidden');
                 loadInitialPreview();
             } else {
-                // Incorrect password
-                passwordError.classList.remove('hidden');
+                // Invalid license
+                licenseError.classList.remove('hidden');
             }
         });
         
-        passwordInput.addEventListener('keypress', function(event) {
+        licenseInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                submitPasswordBtn.click();
+                submitLicenseBtn.click();
             }
+            
+            // Auto-format license key as XXXX-XXXX-XXXX-XXXX
+            const value = licenseInput.value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+            let formatted = '';
+            for (let i = 0; i < value.length && i < 16; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formatted += '-';
+                }
+                formatted += value[i];
+            }
+            licenseInput.value = formatted;
         });
 
-        // --- END: Authentication and Expiration Logic ---
+        // --- END: License-based Authentication Logic ---
 
 
         // Global variables to store data
@@ -1147,6 +1169,10 @@
 
         // Rich text editor toolbar
         const toolbar = document.querySelector('.toolbar');
+        const fontNameSelect = document.getElementById('fontNameSelect');
+        const fontSizeSelect = document.getElementById('fontSizeSelect');
+        const fontColorPicker = document.getElementById('fontColorPicker');
+
         toolbar.addEventListener('click', (e) => {
             const command = e.target.closest('[data-command]')?.dataset.command;
             if (command) {
@@ -1155,19 +1181,21 @@
                  footerTextInput.focus();
             }
         });
-        
-        const fontNameSelect = document.getElementById('fontNameSelect');
-        const fontSizeSelect = document.getElementById('fontSizeSelect');
-        const fontColorPicker = document.getElementById('fontColorPicker');
 
         fontNameSelect.addEventListener('change', (e) => {
             document.execCommand('fontName', false, e.target.value);
             footerTextInput.focus();
         });
+
+        // 修复字体大小处理函数
         fontSizeSelect.addEventListener('change', (e) => {
+            // 使用styleWithCSS来应用实际的字体大小
+            document.execCommand('styleWithCSS', false, true);
             document.execCommand('fontSize', false, e.target.value);
+            document.execCommand('styleWithCSS', false, false);
             footerTextInput.focus();
         });
+
         fontColorPicker.addEventListener('input', (e) => {
             document.execCommand('foreColor', false, e.target.value);
             footerTextInput.focus();
