@@ -273,7 +273,7 @@
                 margin: 0;
             }
             
-            .control-panel, .print-button-container {
+            .control-panel, .print-button-container, #auth-modal, #expired-modal {
                 display: none !important;
             }
             
@@ -347,7 +347,7 @@
         .control-panel h1 {
             color: #2d3748;
             text-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem;
             padding-bottom: 0.75rem;
             border-bottom: 2px solid rgba(79, 70, 229, 0.2);
         }
@@ -549,148 +549,488 @@
             transform-origin: top center;
             transition: transform 0.2s ease-in-out;
         }
+
+        /* Password Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen">
 
-    <div class="control-panel w-full md:w-1/4 lg:w-1/5 bg-white shadow-lg overflow-y-auto">
-        <h1 class="text-2xl font-bold mb-6">Catalog Generator</h1>
-        
-        <div class="space-y-6">
-            <div class="control-section">
-                <h2>Step 1: Upload Product Information</h2>
-                <div class="flex items-center">
-                    <label for="excelFile" class="file-upload-label">
-                        Choose File
-                    </label>
-                    <input type="file" id="excelFile" accept=".xlsx, .xls" class="hidden">
-                    <span id="excelFileName" class="file-info">No file chosen</span>
-                </div>
-                <button id="downloadTemplateBtn" class="mt-2 w-full text-sm">Download Template</button>
-                <p class="mt-1 text-xs text-gray-500">Use the 'page' column to assign products to specific pages. The tool will automatically adjust the layout for 1-9 products per page.</p>
-            </div>
-
-            <div class="control-section">
-                <h2>Step 2: Upload Product Pictures</h2>
-                 <div class="flex items-center">
-                    <label for="imageFiles" class="file-upload-label">
-                        Choose Files
-                    </label>
-                    <input type="file" id="imageFiles" multiple accept="image/*" class="hidden">
-                    <span id="imageFilesName" class="file-info">No files chosen</span>
-                </div>
-                <p class="mt-1 text-xs text-gray-500">Image filename must match 'SKU'. Recommended size 800x800 pixels, max 2MB.</p>
-            </div>
-
-            <div class="control-section">
-                <h2>Step 3: Customize Configuration</h2>
-                <input type="text" id="promoTime" placeholder="Promotion Date (e.g., May Special)" class="input-field" value="July 2025 Special">
-                
-                <div class="mt-2">
-                    <div class="flex border-b border-gray-200">
-                        <div class="tab active" data-tab="promotion">Promotion</div>
-                        <div class="tab" data-tab="new-arrivals">New Arrivals</div>
-                    </div>
-                    
-                    <div class="tab-content active" id="promotion-content">
-                        <input type="text" id="promoText" placeholder="Promotion Title (e.g., Kampanj)" class="mt-2 input-field" value="Kampanj">
-                    </div>
-                    
-                    <div class="tab-content" id="new-arrivals-content">
-                        <input type="text" id="newArrivalsText" placeholder="New Arrivals Title (e.g., NYHETER)" class="mt-2 input-field" value="NYHETER">
-                    </div>
-                </div>
-            </div>
-
-            <div class="control-section">
-                <h2>Custom Footer Text</h2>
-                <div class="toolbar">
-                    <button class="toolbar-btn" data-command="bold" title="Bold"><b>B</b></button>
-                    <button class="toolbar-btn" data-command="italic" title="Italic"><i>I</i></button>
-                    <button class="toolbar-btn" data-command="underline" title="Underline"><u>U</u></button>
-                    <select id="fontNameSelect" class="toolbar-select" title="Font Family">
-                        <option>Arial</option>
-                        <option>Verdana</option>
-                        <option>Georgia</option>
-                        <option>Times New Roman</option>
-                        <option>Courier New</option>
-                    </select>
-                    <select id="fontSizeSelect" class="toolbar-select" title="Font Size">
-                        <option value="1">8pt</option>
-                        <option value="2">10pt</option>
-                        <option value="3" selected>12pt</option>
-                        <option value="4">14pt</option>
-                        <option value="5">18pt</option>
-                        <option value="6">24pt</option>
-                        <option value="7">36pt</option>
-                    </select>
-                    <input type="color" id="fontColorPicker" class="toolbar-color" title="Font Color">
-                </div>
-                <div id="footerText" contenteditable="true" class="input-field rich-text-editor"><b>CTFOOD STOCKHOLM:</b> 08 581 658 80 | order.sth@ctfood.se | www.ctfood.se<br>Med reservation för slutförsäljning och tryckfel. Priserna är angivna svenska kronor exkl. moms. Leveransvillkor fritt vårt lager. Leveranstid: 1-3 dagar. Betalningsvillkor: 15 dagar netto efter godkänd sedvanlig kreditprovning</div>
-            </div>
-
-            <div class="control-section">
-                <h2>Customize Appearance</h2>
-                <p class="mt-1 mb-2 text-xs text-gray-500">Tip: Name origin flags after the country (e.g., Thailand.png). Other images: Header Logo (400x100), Header BG (600x100 recommended), Page BG (1240x1754), Price Tag (100x100), Footer (100x100).</p>
-                <div class="space-y-2">
-                    <div class="flex items-center">
-                        <label for="logoFile" class="file-upload-label">Header Logo</label>
-                        <input type="file" id="logoFile" accept="image/*" class="hidden">
-                        <span id="logoFileName" class="file-info">No file chosen</span>
-                    </div>
-                    <div class="flex items-center">
-                        <label for="headerBackgroundFile" class="file-upload-label">Header BG</label>
-                        <input type="file" id="headerBackgroundFile" accept="image/*" class="hidden">
-                        <span id="headerBackgroundFileName" class="file-info">No file chosen</span>
-                    </div>
-                    <div class="flex items-center">
-                        <label for="backgroundFile" class="file-upload-label">Page BG</label>
-                        <input type="file" id="backgroundFile" accept="image/*" class="hidden">
-                        <span id="backgroundFileName" class="file-info">No file chosen</span>
-                    </div>
-                    <div class="flex items-center">
-                        <label for="priceTagFile" class="file-upload-label">Price Tag BG</label>
-                        <input type="file" id="priceTagFile" accept="image/*" class="hidden">
-                        <span id="priceTagFileName" class="file-info">No file chosen</span>
-                    </div>
-                    <div class="flex items-center">
-                        <label for="originFlagFiles" class="file-upload-label">Origin Flags</label>
-                        <input type="file" id="originFlagFiles" accept="image/*" class="hidden" multiple>
-                        <span id="originFlagFilesName" class="file-info">No file chosen</span>
-                    </div>
-                    <div class="flex items-center">
-                        <label for="footerLogoFile" class="file-upload-label">Footer Image</label>
-                        <input type="file" id="footerLogoFile" accept="image/*" class="hidden">
-                        <span id="footerLogoFileName" class="file-info">No file chosen</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="control-section">
-            <h2>Zoom Preview</h2>
-            <div class="flex items-center space-x-2">
-                <button id="zoomOutBtn" class="p-2 border rounded-md cursor-pointer">-</button>
-                <input type="range" id="zoomSlider" min="50" max="150" value="100" class="w-full cursor-pointer">
-                <button id="zoomInBtn" class="p-2 border rounded-md cursor-pointer">+</button>
-            </div>
-            <div class="text-center mt-1 text-sm text-gray-600"><span id="zoomValue">100</span>%</div>
-        </div>
-
-        <div id="status" class="mt-6 space-y-2"></div>
-
-        <div class="print-button-container mt-6">
-             <button id="printBtn" class="btn-primary hidden">
-                Print or Save as PDF
-            </button>
+    <!-- Password Modal -->
+    <div id="auth-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 class="text-xl font-bold mb-4" data-lang-key="passwordTitle">请输入密码</h2>
+            <p class="text-gray-600 mb-4" data-lang-key="passwordPrompt">请输入密码以继续使用。</p>
+            <input type="password" id="password-input" class="input-field mb-4" data-lang-placeholder="passwordPlaceholder">
+            <button id="submit-password" class="btn-primary" data-lang-key="confirmButton">确认</button>
+            <p id="password-error" class="text-red-500 text-sm mt-2 hidden" data-lang-key="passwordError">密码错误，请重试。</p>
         </div>
     </div>
 
-    <div id="preview" class="flex-1 p-6 overflow-y-auto">
+    <!-- Expired Modal -->
+    <div id="expired-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 class="text-xl font-bold mb-4 text-red-600" data-lang-key="expiredTitle">使用期限已到</h2>
+            <p class="text-gray-600" data-lang-key="expiredText">您的使用期限已过一个月。请联系管理员以获取新的访问权限。</p>
         </div>
+    </div>
+    
+    <!-- Main Application Wrapper -->
+    <div id="app-wrapper" class="flex flex-col md:flex-row h-screen w-full hidden">
+        <div class="control-panel w-full md:w-1/4 lg:w-1/5 bg-white shadow-lg overflow-y-auto">
+            <h1 class="text-2xl font-bold" data-lang-key="appTitle">Catalog Generator</h1>
+            <div class="my-4">
+                <label for="language-selector" class="sr-only" data-lang-key="languageLabel">Language</label>
+                <select id="language-selector" class="input-field">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                    <option value="sv">Svenska</option>
+                </select>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="control-section">
+                    <h2 data-lang-key="step1Title">第一步：上传产品信息</h2>
+                    <div class="flex items-center">
+                        <label for="excelFile" class="file-upload-label" data-lang-key="chooseFile">
+                            选择文件
+                        </label>
+                        <input type="file" id="excelFile" accept=".xlsx, .xls" class="hidden">
+                        <span id="excelFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                    </div>
+                    <button id="downloadTemplateBtn" class="mt-2 w-full text-sm" data-lang-key="downloadTemplate">下载模板</button>
+                    <p class="mt-1 text-xs text-gray-500" data-lang-key="step1Desc">使用 'page' 列将产品分配到特定页面。工具将自动为每页1-9个产品调整布局。</p>
+                </div>
+
+                <div class="control-section">
+                    <h2 data-lang-key="step2Title">第二步：上传产品图片</h2>
+                     <div class="flex items-center">
+                        <label for="imageFiles" class="file-upload-label" data-lang-key="chooseFiles">
+                            选择文件
+                        </label>
+                        <input type="file" id="imageFiles" multiple accept="image/*" class="hidden">
+                        <span id="imageFilesName" class="file-info" data-lang-key="noFilesChosen">未选择文件</span>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500" data-lang-key="step2Desc">图片文件名必须与'SKU'匹配。推荐尺寸800x800像素，最大2MB。</p>
+                </div>
+
+                <div class="control-section">
+                    <h2 data-lang-key="step3Title">第三步：自定义配置</h2>
+                    <input type="text" id="promoTime" class="input-field" data-lang-placeholder="promoDatePlaceholder" value="July 2025 Special">
+                    
+                    <div class="mt-2">
+                        <div class="flex border-b border-gray-200">
+                            <div class="tab active" data-tab="promotion" data-lang-key="promoTab">促销</div>
+                            <div class="tab" data-tab="new-arrivals" data-lang-key="newArrivalsTab">新品</div>
+                        </div>
+                        
+                        <div class="tab-content active" id="promotion-content">
+                            <input type="text" id="promoText" class="mt-2 input-field" data-lang-placeholder="promoTitlePlaceholder" value="Kampanj">
+                        </div>
+                        
+                        <div class="tab-content" id="new-arrivals-content">
+                            <input type="text" id="newArrivalsText" class="mt-2 input-field" data-lang-placeholder="newArrivalsTitlePlaceholder" value="NYHETER">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h2 data-lang-key="footerTitle">自定义页脚文本</h2>
+                    <div class="toolbar">
+                        <button class="toolbar-btn" data-command="bold" title="加粗"><b>B</b></button>
+                        <button class="toolbar-btn" data-command="italic" title="斜体"><i>I</i></button>
+                        <button class="toolbar-btn" data-command="underline" title="下划线"><u>U</u></button>
+                        <select id="fontNameSelect" class="toolbar-select" title="字体">
+                            <option>Arial</option>
+                            <option>Verdana</option>
+                            <option>Georgia</option>
+                            <option>Times New Roman</option>
+                            <option>Courier New</option>
+                        </select>
+                        <select id="fontSizeSelect" class="toolbar-select" title="字号">
+                            <option value="1">8pt</option>
+                            <option value="2">10pt</option>
+                            <option value="3" selected>12pt</option>
+                            <option value="4">14pt</option>
+                            <option value="5">18pt</option>
+                            <option value="6">24pt</option>
+                            <option value="7">36pt</option>
+                        </select>
+                        <input type="color" id="fontColorPicker" class="toolbar-color" title="字体颜色">
+                    </div>
+                    <div id="footerText" contenteditable="true" class="input-field rich-text-editor"><b>CTFOOD STOCKHOLM:</b> 08 581 658 80 | order.sth@ctfood.se | www.ctfood.se<br>Med reservation för slutförsäljning och tryckfel. Priserna är angivna svenska kronor exkl. moms. Leveransvillkor fritt vårt lager. Leveranstid: 1-3 dagar. Betalningsvillkor: 15 dagar netto efter godkänd sedvanlig kreditprovning</div>
+                </div>
+
+                <div class="control-section">
+                    <h2 data-lang-key="appearanceTitle">自定义外观</h2>
+                    <p class="mt-1 mb-2 text-xs text-gray-500" data-lang-key="appearanceDesc">提示：将原产地旗帜命名为国家名 (例如, Thailand.png)。其他图片：页眉Logo (400x100), 页眉背景 (推荐600x100), 页面背景 (1240x1754), 价格标签 (100x100), 页脚 (100x100)。</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <label for="logoFile" class="file-upload-label" data-lang-key="headerLogo">页眉Logo</label>
+                            <input type="file" id="logoFile" accept="image/*" class="hidden">
+                            <span id="logoFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                        </div>
+                        <div class="flex items-center">
+                            <label for="headerBackgroundFile" class="file-upload-label" data-lang-key="headerBg">页眉背景</label>
+                            <input type="file" id="headerBackgroundFile" accept="image/*" class="hidden">
+                            <span id="headerBackgroundFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                        </div>
+                        <div class="flex items-center">
+                            <label for="backgroundFile" class="file-upload-label" data-lang-key="pageBg">页面背景</label>
+                            <input type="file" id="backgroundFile" accept="image/*" class="hidden">
+                            <span id="backgroundFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                        </div>
+                        <div class="flex items-center">
+                            <label for="priceTagFile" class="file-upload-label" data-lang-key="priceTagBg">价格标签背景</label>
+                            <input type="file" id="priceTagFile" accept="image/*" class="hidden">
+                            <span id="priceTagFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                        </div>
+                        <div class="flex items-center">
+                            <label for="originFlagFiles" class="file-upload-label" data-lang-key="originFlags">原产地旗帜</label>
+                            <input type="file" id="originFlagFiles" accept="image/*" class="hidden" multiple>
+                            <span id="originFlagFilesName" class="file-info" data-lang-key="noFilesChosen">未选择文件</span>
+                        </div>
+                        <div class="flex items-center">
+                            <label for="footerLogoFile" class="file-upload-label" data-lang-key="footerImage">页脚图片</label>
+                            <input type="file" id="footerLogoFile" accept="image/*" class="hidden">
+                            <span id="footerLogoFileName" class="file-info" data-lang-key="noFileChosen">未选择文件</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h2 data-lang-key="zoomTitle">缩放预览</h2>
+                <div class="flex items-center space-x-2">
+                    <button id="zoomOutBtn" class="p-2 border rounded-md cursor-pointer">-</button>
+                    <input type="range" id="zoomSlider" min="50" max="150" value="100" class="w-full cursor-pointer">
+                    <button id="zoomInBtn" class="p-2 border rounded-md cursor-pointer">+</button>
+                </div>
+                <div class="text-center mt-1 text-sm text-gray-600"><span id="zoomValue">100</span>%</div>
+            </div>
+
+            <div id="status" class="mt-6 space-y-2"></div>
+
+            <div class="print-button-container mt-6">
+                 <button id="printBtn" class="btn-primary hidden" data-lang-key="printButton">
+                    打印或另存为PDF
+                </button>
+            </div>
+        </div>
+
+        <div id="preview" class="flex-1 p-6 overflow-y-auto">
+        </div>
+    </div>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- START: Prevent Source Code Viewing ---
+        // This is a deterrent, not a foolproof method.
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable keyboard shortcuts for developer tools
+        document.addEventListener('keydown', event => {
+            // F12
+            if (event.keyCode === 123) {
+                event.preventDefault();
+            }
+            // Ctrl+Shift+I
+            if (event.ctrlKey && event.shiftKey && event.keyCode === 73) {
+                event.preventDefault();
+            }
+            // Ctrl+Shift+J
+            if (event.ctrlKey && event.shiftKey && event.keyCode === 74) {
+                event.preventDefault();
+            }
+            // Ctrl+U
+            if (event.ctrlKey && event.keyCode === 85) {
+                event.preventDefault();
+            }
+        });
+        // --- END: Prevent Source Code Viewing ---
+
+        // --- START: Multi-language Support ---
+        const translations = {
+            en: {
+                appTitle: "Catalog Generator",
+                languageLabel: "Language",
+                step1Title: "Step 1: Upload Product Information",
+                chooseFile: "Choose File",
+                chooseFiles: "Choose Files",
+                noFileChosen: "No file chosen",
+                noFilesChosen: "No files chosen",
+                downloadTemplate: "Download Template",
+                step1Desc: "Use the 'page' column to assign products to specific pages. The tool will automatically adjust the layout for 1-9 products per page.",
+                step2Title: "Step 2: Upload Product Pictures",
+                step2Desc: "Image filename must match 'SKU'. Recommended size 800x800 pixels, max 2MB.",
+                step3Title: "Step 3: Customize Configuration",
+                promoDatePlaceholder: "Promotion Date (e.g., May Special)",
+                promoTab: "Promotion",
+                newArrivalsTab: "New Arrivals",
+                promoTitlePlaceholder: "Promotion Title (e.g., Kampanj)",
+                newArrivalsTitlePlaceholder: "New Arrivals Title (e.g., NYHETER)",
+                footerTitle: "Custom Footer Text",
+                appearanceTitle: "Customize Appearance",
+                appearanceDesc: "Tip: Name origin flags after the country (e.g., Thailand.png). Other images: Header Logo (400x100), Header BG (600x100 recommended), Page BG (1240x1754), Price Tag (100x100), Footer (100x100).",
+                headerLogo: "Header Logo",
+                headerBg: "Header BG",
+                pageBg: "Page BG",
+                priceTagBg: "Price Tag BG",
+                originFlags: "Origin Flags",
+                footerImage: "Footer Image",
+                zoomTitle: "Zoom Preview",
+                printButton: "Print or Save as PDF",
+                passwordTitle: "Enter Password",
+                passwordPrompt: "Please enter the password to continue.",
+                passwordPlaceholder: "Password",
+                confirmButton: "Confirm",
+                passwordError: "Incorrect password, please try again.",
+                expiredTitle: "Usage Period Expired",
+                expiredText: "Your one-month usage period has ended. Please contact the administrator for new access.",
+                previewHeader: "Product Preview",
+                previewText: "Please upload the Excel and image files on the left to begin.",
+                statusParsingExcel: "Parsing Excel file...",
+                statusParseSuccess: (count) => `Excel parsed successfully with ${count} products found.`,
+                statusParseFailed: (error) => `Excel parsing failed with the following error: ${error}`,
+                statusProcessingImages: "Processing images...",
+                statusImagesSuccess: (processed, total) => `Images processed successfully: ${processed} out of ${total}`,
+                statusImageProcessFailed: (name) => `Failed to process the following file: ${name}`,
+                statusImageTooLarge: (name) => `The image ${name} is too large (over 2MB) and was skipped.`,
+                statusImageCompressFailed: (name) => `Image compression failed for the file ${name}. Using the original file.`,
+                statusRenderError: (error) => `The following rendering error occurred: ${error}`,
+                statusUnknownError: "An unknown error occurred. Please check your files or refresh the page.",
+                statusScriptError: "A script error occurred. Please refresh the page and try again.",
+                statusTotalProducts: (total, matched) => `Total ${total} products, found ${matched} matching images.`,
+                statusMissingImages: (skus) => `Missing images for the following SKUs: ${skus}`
+            },
+            zh: {
+                appTitle: "产品目录生成器",
+                languageLabel: "语言",
+                step1Title: "第一步：上传产品信息",
+                chooseFile: "选择文件",
+                chooseFiles: "选择多个文件",
+                noFileChosen: "未选择文件",
+                noFilesChosen: "未选择文件",
+                downloadTemplate: "下载模板",
+                step1Desc: "使用 'page' 列将产品分配到特定页面。工具将自动为每页1-9个产品调整布局。",
+                step2Title: "第二步：上传产品图片",
+                step2Desc: "图片文件名必须与'SKU'匹配。推荐尺寸800x800像素，最大2MB。",
+                step3Title: "第三步：自定义配置",
+                promoDatePlaceholder: "促销日期 (例如, 五月特惠)",
+                promoTab: "促销",
+                newArrivalsTab: "新品",
+                promoTitlePlaceholder: "促销标题 (例如, Kampanj)",
+                newArrivalsTitlePlaceholder: "新品标题 (例如, NYHETER)",
+                footerTitle: "自定义页脚文本",
+                appearanceTitle: "自定义外观",
+                appearanceDesc: "提示：将原产地旗帜命名为国家名 (例如, Thailand.png)。其他图片：页眉Logo (400x100), 页眉背景 (推荐600x100), 页面背景 (1240x1754), 价格标签 (100x100), 页脚 (100x100)。",
+                headerLogo: "页眉Logo",
+                headerBg: "页眉背景",
+                pageBg: "页面背景",
+                priceTagBg: "价格标签背景",
+                originFlags: "原产地旗帜",
+                footerImage: "页脚图片",
+                zoomTitle: "缩放预览",
+                printButton: "打印或另存为PDF",
+                passwordTitle: "请输入密码",
+                passwordPrompt: "请输入密码以继续使用。",
+                passwordPlaceholder: "密码",
+                confirmButton: "确认",
+                passwordError: "密码错误，请重试。",
+                expiredTitle: "使用期限已到",
+                expiredText: "您的使用期限已过一个月。请联系管理员以获取新的访问权限。",
+                previewHeader: "产品预览",
+                previewText: "请在左侧上传Excel和图片文件以开始。",
+                statusParsingExcel: "正在解析Excel文件...",
+                statusParseSuccess: (count) => `Excel解析成功，找到 ${count} 个产品。`,
+                statusParseFailed: (error) => `Excel解析失败: ${error}`,
+                statusProcessingImages: "正在处理图片...",
+                statusImagesSuccess: (processed, total) => `图片处理成功: ${processed} / ${total}`,
+                statusImageProcessFailed: (name) => `处理文件失败: ${name}`,
+                statusImageTooLarge: (name) => `图片 ${name} 太大 (超过2MB)，已跳过。`,
+                statusImageCompressFailed: (name) => `图片压缩失败: ${name}。使用原始文件。`,
+                statusRenderError: (error) => `渲染时发生错误: ${error}`,
+                statusUnknownError: "发生未知错误。请检查您的文件或刷新页面。",
+                statusScriptError: "发生脚本错误。请刷新页面重试。",
+                statusTotalProducts: (total, matched) => `共 ${total} 个产品，找到 ${matched} 张匹配图片。`,
+                statusMissingImages: (skus) => `以下SKU缺少图片: ${skus}`
+            },
+            sv: {
+                appTitle: "Kataloggenerator",
+                languageLabel: "Språk",
+                step1Title: "Steg 1: Ladda upp produktinformation",
+                chooseFile: "Välj fil",
+                chooseFiles: "Välj filer",
+                noFileChosen: "Ingen fil vald",
+                noFilesChosen: "Inga filer valda",
+                downloadTemplate: "Ladda ner mall",
+                step1Desc: "Använd 'page'-kolumnen för att tilldela produkter till specifika sidor. Verktyget justerar automatiskt layouten för 1-9 produkter per sida.",
+                step2Title: "Steg 2: Ladda upp produktbilder",
+                step2Desc: "Bildens filnamn måste matcha 'SKU'. Rekommenderad storlek 800x800 pixlar, max 2MB.",
+                step3Title: "Steg 3: Anpassa konfiguration",
+                promoDatePlaceholder: "Kampanjdatum (t.ex. Maj-special)",
+                promoTab: "Kampanj",
+                newArrivalsTab: "Nyheter",
+                promoTitlePlaceholder: "Kampanjtitel (t.ex. Kampanj)",
+                newArrivalsTitlePlaceholder: "Nyhetstitel (t.ex. NYHETER)",
+                footerTitle: "Anpassad sidfotstext",
+                appearanceTitle: "Anpassa utseende",
+                appearanceDesc: "Tips: Namnge ursprungsflaggor efter landet (t.ex. Thailand.png). Andra bilder: Sidhuvud-logotyp (400x100), Sidhuvud-bakgrund (600x100 rekommenderas), Sidbakgrund (1240x1754), Prislapp (100x100), Sidfot (100x100).",
+                headerLogo: "Sidhuvud-logotyp",
+                headerBg: "Sidhuvud BG",
+                pageBg: "Sidbakgrund",
+                priceTagBg: "Prislapp BG",
+                originFlags: "Ursprungsflaggor",
+                footerImage: "Sidfotsbild",
+                zoomTitle: "Zooma förhandsgranskning",
+                printButton: "Skriv ut eller spara som PDF",
+                passwordTitle: "Ange lösenord",
+                passwordPrompt: "Vänligen ange lösenordet för att fortsätta.",
+                passwordPlaceholder: "Lösenord",
+                confirmButton: "Bekräfta",
+                passwordError: "Felaktigt lösenord, försök igen.",
+                expiredTitle: "Användningsperioden har löpt ut",
+                expiredText: "Din enmånads användningsperiod har löpt ut. Vänligen kontakta administratören för ny åtkomst.",
+                previewHeader: "Produktförhandsgranskning",
+                previewText: "Vänligen ladda upp Excel- och bildfilerna till vänster för att börja.",
+                statusParsingExcel: "Analyserar Excel-fil...",
+                statusParseSuccess: (count) => `Excel analyserades framgångsrikt med ${count} produkter hittade.`,
+                statusParseFailed: (error) => `Excel-analys misslyckades med följande fel: ${error}`,
+                statusProcessingImages: "Bearbetar bilder...",
+                statusImagesSuccess: (processed, total) => `Bilder bearbetade framgångsrikt: ${processed} av ${total}`,
+                statusImageProcessFailed: (name) => `Misslyckades med att bearbeta följande fil: ${name}`,
+                statusImageTooLarge: (name) => `Bilden ${name} är för stor (över 2MB) och hoppades över.`,
+                statusImageCompressFailed: (name) => `Bildkomprimering misslyckades för filen ${name}. Använder originalfilen.`,
+                statusRenderError: (error) => `Följande renderingsfel inträffade: ${error}`,
+                statusUnknownError: "Ett okänt fel inträffade. Kontrollera dina filer eller uppdatera sidan.",
+                statusScriptError: "Ett skriptfel inträffade. Uppdatera sidan och försök igen.",
+                statusTotalProducts: (total, matched) => `Totalt ${total} produkter, hittade ${matched} matchande bilder.`,
+                statusMissingImages: (skus) => `Saknar bilder för följande SKU:er: ${skus}`
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'en';
+        let userHasUploaded = false; // Flag to check if user has uploaded their own files
+
+        const languageSelector = document.getElementById('language-selector');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            languageSelector.value = lang;
+
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.dataset.langKey;
+                if (translations[lang] && translations[lang][key]) {
+                    const translation = translations[lang][key];
+                    if (typeof translation === 'function') {
+                        // Functions are used for dynamic status messages, handle them elsewhere
+                    } else {
+                        el.textContent = translation;
+                    }
+                }
+            });
+            
+            document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+                const key = el.dataset.langPlaceholder;
+                if (translations[lang] && translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+            
+            // Re-render preview to update placeholder text if visible
+            renderPreview();
+        }
+
+        languageSelector.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+
+        // --- END: Multi-language Support ---
+
+        // --- START: Authentication and Expiration Logic ---
+        const authModal = document.getElementById('auth-modal');
+        const expiredModal = document.getElementById('expired-modal');
+        const appWrapper = document.getElementById('app-wrapper');
+        const passwordInput = document.getElementById('password-input');
+        const submitPasswordBtn = document.getElementById('submit-password');
+        const passwordError = document.getElementById('password-error');
+
+        // IMPORTANT: Change this password to your desired password
+        const CORRECT_PASSWORD = 'C-FOOD2024';
+        const EXPIRATION_DAYS = 30;
+
+        function checkAccess() {
+            const activationDateStr = localStorage.getItem('activationDate');
+
+            if (activationDateStr) {
+                const activationDate = new Date(parseInt(activationDateStr));
+                const now = new Date();
+                const daysPassed = (now.getTime() - activationDate.getTime()) / (1000 * 3600 * 24);
+
+                if (daysPassed > EXPIRATION_DAYS) {
+                    // Expired
+                    expiredModal.classList.remove('hidden');
+                    appWrapper.classList.add('hidden');
+                } else {
+                    // Access granted
+                    appWrapper.classList.remove('hidden');
+                    authModal.classList.add('hidden');
+                    loadInitialPreview();
+                }
+            } else {
+                // First time use, ask for password
+                authModal.classList.remove('hidden');
+                appWrapper.classList.add('hidden');
+            }
+        }
+
+        submitPasswordBtn.addEventListener('click', () => {
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                // Correct password, set activation date
+                localStorage.setItem('activationDate', Date.now().toString());
+                authModal.classList.add('hidden');
+                appWrapper.classList.remove('hidden');
+                passwordError.classList.add('hidden');
+                loadInitialPreview();
+            } else {
+                // Incorrect password
+                passwordError.classList.remove('hidden');
+            }
+        });
+        
+        passwordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                submitPasswordBtn.click();
+            }
+        });
+
+        // --- END: Authentication and Expiration Logic ---
+
+
         // Global variables to store data
         let productData = [];
         let productImages = {};
@@ -701,6 +1041,39 @@
         let footerLogoUrl = '';
         let headerBackgroundUrl = '';
         let currentTab = 'promotion';
+
+        // --- START: Sample Data ---
+        const sampleProductData = [
+            { page: 1, sku: '1001', name: 'Instant Noodles', size: '5-pack', brand: 'Sample Brand', origin: 'China', price: 15.50, bbd: '2025-12-31', unit: 'pack', remark: 'Hot Sale' },
+            { page: 1, sku: '1002', name: 'Organic Soy Sauce', size: '500ml', brand: 'Sample Brand', origin: 'Japan', price: 32.00, bbd: '2026-06-30', unit: 'bottle', remark: '' },
+            { page: 1, sku: '1003', name: 'Thai Jasmine Rice', size: '5kg', brand: 'Golden Elephant', origin: 'Thailand', price: 125.00, bbd: '2026-01-15', unit: 'bag', remark: 'New' },
+            { page: 1, sku: '1004', name: 'Korean Kimchi', size: '1kg', brand: 'Jongga', origin: 'Korea', price: 55.90, bbd: '2025-10-20', unit: 'jar', remark: '' },
+        ];
+        const sampleProductImages = {
+            '1001': 'https://placehold.co/800x800/f87171/ffffff?text=Noodles',
+            '1002': 'https://placehold.co/800x800/fbbf24/ffffff?text=Soy+Sauce',
+            '1003': 'https://placehold.co/800x800/34d399/ffffff?text=Rice',
+            '1004': 'https://placehold.co/800x800/ef4444/ffffff?text=Kimchi',
+        };
+        const sampleOriginImages = {
+            'China': 'https://placehold.co/40x30/ef4444/ffffff?text=CN',
+            'Japan': 'https://placehold.co/40x30/ffffff/ef4444?text=JP',
+            'Thailand': 'https://placehold.co/40x30/3b82f6/ffffff?text=TH',
+            'Korea': 'https://placehold.co/40x30/6366f1/ffffff?text=KR',
+        };
+        // --- END: Sample Data ---
+        
+        function loadInitialPreview() {
+            if (!userHasUploaded) {
+                productData = sampleProductData;
+                productImages = sampleProductImages;
+                originImages = sampleOriginImages;
+                // You can also set sample URLs for logo, background etc. if you want
+                // logoUrl = 'https://placehold.co/400x100/cccccc/333333?text=Your+Logo';
+                renderPreview();
+            }
+        }
+
 
         // DOM element references
         const excelFileInput = document.getElementById('excelFile');
@@ -800,8 +1173,18 @@
             footerTextInput.focus();
         });
         
-        function addStatusMessage(text, type = 'info') {
+        function getTranslation(key, ...args) {
+            const langPack = translations[currentLang] || translations.en;
+            const translation = langPack[key];
+            if (typeof translation === 'function') {
+                return translation(...args);
+            }
+            return translation || key;
+        }
+        
+        function addStatusMessage(key, type = 'info', ...args) {
             if (!statusDiv) return;
+            const text = getTranslation(key, ...args);
             const div = document.createElement('div');
             const typeClasses = {
                 error: 'status-message error',
@@ -821,12 +1204,12 @@
         
         window.addEventListener('unhandledrejection', event => {
             console.error('Unhandled Rejection:', event.reason);
-            addStatusMessage('An unknown error occurred. Please check your files or refresh the page.', 'error');
+            addStatusMessage('statusUnknownError', 'error');
         });
 
         window.onerror = (message, source, lineno, colno, error) => {
             console.error('Global Error:', { message, source, lineno, colno, error });
-            addStatusMessage('A script error occurred. Please refresh the page and try again.', 'error');
+            addStatusMessage('statusScriptError', 'error');
         };
 
         function debounce(func, delay) {
@@ -896,8 +1279,10 @@
         }
 
         const renderPreview = () => {
-            if (productData.length === 0) {
-                previewArea.innerHTML = `<div class="flex items-center justify-center h-full border-2 border-dashed border-gray-300 rounded-lg"><div class="text-center"><svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2z" /></svg><h3 class="mt-2 text-sm font-medium text-gray-900">Product Preview</h3><p class="mt-1 text-sm text-gray-500">Please upload the Excel and image files on the left to begin.</p></div></div>`;
+            if (productData.length === 0 && userHasUploaded) {
+                const header = getTranslation('previewHeader');
+                const text = getTranslation('previewText');
+                previewArea.innerHTML = `<div class="flex items-center justify-center h-full border-2 border-dashed border-gray-300 rounded-lg"><div class="text-center"><svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2z" /></svg><h3 class="mt-2 text-sm font-medium text-gray-900">${header}</h3><p class="mt-1 text-sm text-gray-500">${text}</p></div></div>`;
                 printBtn.classList.add('hidden');
                 clearStatus();
                 return;
@@ -918,10 +1303,13 @@
                         else missingImages.push(productCode);
                     });
 
-                    addStatusMessage(`Total ${productData.length} products, found ${matchedCount} matching images.`);
-                    if (missingImages.length > 0) {
-                        addStatusMessage(`Missing images for the following SKUs: ${missingImages.join(', ')}`, 'error');
+                    if (userHasUploaded) {
+                        addStatusMessage('statusTotalProducts', 'info', productData.length, matchedCount);
+                        if (missingImages.length > 0) {
+                            addStatusMessage('statusMissingImages', 'error', missingImages.join(', '));
+                        }
                     }
+
 
                     const promoTime = promoTimeInput.value;
                     const isPriceHidden = currentTab === 'new-arrivals';
@@ -1113,17 +1501,18 @@
                 } catch (error) {
                     console.error('Rendering error:', error);
                     previewArea.classList.remove('loading');
-                    addStatusMessage(`The following rendering error occurred: ${error.message}`, 'error');
+                    addStatusMessage('statusRenderError', 'error', error.message);
                 }
             }, 50);
         };
         
         async function handleImageUpload(file, skipCompression = false) {
+            userHasUploaded = true;
             if (skipCompression) {
                 return URL.createObjectURL(file);
             }
             if (file.size > 2 * 1024 * 1024) {
-                addStatusMessage(`The image ${file.name} is too large (over 2MB) and was skipped.`, 'error');
+                addStatusMessage('statusImageTooLarge', 'error', file.name);
                 return null;
             }
             const options = { maxSizeMB: 1, maxWidthOrHeight: 800, useWebWorker: false };
@@ -1136,20 +1525,21 @@
                 return URL.createObjectURL(compressedFile);
             } catch (error) {
                 console.error("Image compression error: ", error);
-                addStatusMessage(`Image compression failed for the file ${file.name}. Using the original file.`, 'warning');
+                addStatusMessage('statusImageCompressFailed', 'warning', file.name);
                 return URL.createObjectURL(file);
             }
         }
 
         excelFileInput.addEventListener('change', (event) => {
+            userHasUploaded = true;
             const file = event.target.files[0];
             if (!file) {
-                document.getElementById('excelFileName').textContent = 'No file chosen';
+                document.getElementById('excelFileName').textContent = getTranslation('noFileChosen');
                 return;
             }
             document.getElementById('excelFileName').textContent = file.name;
             clearStatus();
-            addStatusMessage('Parsing Excel file...');
+            addStatusMessage('statusParsingExcel', 'info');
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
@@ -1157,23 +1547,24 @@
                     const workbook = XLSX.read(data, {type: 'array'});
                     const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
                     productData = normalizeData(jsonData);
-                    addStatusMessage(`Excel parsed successfully with ${productData.length} products found.`, 'success');
+                    addStatusMessage('statusParseSuccess', 'success', productData.length);
                     renderPreview();
                 } catch (error) {
-                    addStatusMessage(`Excel parsing failed with the following error: ${error.message}`, 'error');
+                    addStatusMessage('statusParseFailed', 'error', error.message);
                 }
             };
             reader.readAsArrayBuffer(file);
         });
 
         async function processImageFiles(files, targetObject, nameSpan) {
+            userHasUploaded = true;
             if (files.length === 0) {
-                nameSpan.textContent = 'No files chosen';
+                nameSpan.textContent = getTranslation('noFilesChosen');
                 return;
             }
-            nameSpan.textContent = `${files.length} files selected`;
+            nameSpan.textContent = `${files.length} ${getTranslation('filesSelected') || 'files selected'}`;
             clearStatus();
-            addStatusMessage('Processing images...');
+            addStatusMessage('statusProcessingImages', 'info');
             
             Object.keys(targetObject).forEach(key => URL.revokeObjectURL(targetObject[key]));
             for (const key in targetObject) { delete targetObject[key]; }
@@ -1188,10 +1579,10 @@
                         processedCount++;
                     }
                 } catch (error) {
-                    addStatusMessage(`Failed to process the following file: ${file.name}`, 'error');
+                    addStatusMessage('statusImageProcessFailed', 'error', file.name);
                 }
             }
-            addStatusMessage(`Images processed successfully: ${processedCount} out of ${files.length}`, 'success');
+            addStatusMessage('statusImagesSuccess', 'success', processedCount, files.length);
             renderPreview();
         }
 
@@ -1206,10 +1597,11 @@
         async function setupImageInput(inputId, urlVariableSetter, imageTypeName, skipCompression = false) {
             const input = document.getElementById(inputId);
             input.addEventListener('change', async (event) => {
+                userHasUploaded = true;
                 const file = event.target.files[0];
                 const fileNameSpan = document.getElementById(inputId + 'Name');
                 if (!file) {
-                    fileNameSpan.textContent = 'No file chosen';
+                    fileNameSpan.textContent = getTranslation('noFileChosen');
                     urlVariableSetter('');
                     renderPreview();
                     return;
@@ -1220,16 +1612,16 @@
                     urlVariableSetter(url);
                     renderPreview();
                 } catch (error) {
-                    addStatusMessage(`The ${imageTypeName} failed to load with the following error: ${error.message}`, 'error');
+                    addStatusMessage('statusImageLoadFailed', 'error', imageTypeName, error.message);
                 }
             });
         }
 
-        setupImageInput('backgroundFile', url => backgroundUrl = url, 'background image');
-        setupImageInput('logoFile', url => logoUrl = url, 'logo image');
-        setupImageInput('priceTagFile', url => priceTagUrl = url, 'price tag image');
-        setupImageInput('footerLogoFile', url => footerLogoUrl = url, 'footer logo image');
-        setupImageInput('headerBackgroundFile', url => headerBackgroundUrl = url, 'header background', true);
+        setupImageInput('backgroundFile', url => backgroundUrl = url, '背景图片');
+        setupImageInput('logoFile', url => logoUrl = url, 'logo图片');
+        setupImageInput('priceTagFile', url => priceTagUrl = url, '价格标签图片');
+        setupImageInput('footerLogoFile', url => footerLogoUrl = url, '页脚logo图片');
+        setupImageInput('headerBackgroundFile', url => headerBackgroundUrl = url, '页眉背景', true);
 
         promoTimeInput.addEventListener('input', debounce(renderPreview, 300));
         promoTextInput.addEventListener('input', debounce(renderPreview, 300));
@@ -1246,7 +1638,9 @@
             XLSX.writeFile(wb, 'catalog_template.xlsx');
         });
 
-        renderPreview();
+        // Initial setup
+        setLanguage(currentLang);
+        checkAccess();
     });
     </script>
 </body>
