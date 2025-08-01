@@ -1,8 +1,6 @@
 ## 🌐 Language / 语言 / Språk
 
-- [English](#english)
-- [中文](#中文)
-- [Svenska](#svenska)
+- [English](#english) /  [中文](#中文) /  [Svenska](#svenska)
 
 ---
 
