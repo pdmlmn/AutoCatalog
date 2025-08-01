@@ -1,5 +1,12 @@
-# 🇬🇧 English
+## 🌐 Language / 语言 / Språk
 
+- [English](#english)
+- [中文](#中文)
+- [Svenska](#svenska)
+
+---
+
+# English <a name="english"></a>
 ## Automatic Catalog Generator (V1.1)
 
 This is a powerful, offline-first, browser-based tool designed to automatically generate professional, print-ready A4 product catalogs. It dynamically creates pages by merging data from an Excel spreadsheet with corresponding product images, offering extensive customization options to fit your brand identity.
@@ -88,7 +95,7 @@ This section lets you fully brand your catalog. For best results, use the recomm
 
 -----
 
-# 🇨🇳 中文 (Chinese)
+# 中文 (Chinese) <a name="中文"></a>
 
 ## 自动目录生成器 (V1.1)
 
@@ -178,7 +185,7 @@ This section lets you fully brand your catalog. For best results, use the recomm
 
 -----
 
-# 🇸🇪 Svenska (Swedish)
+# Svenska (Swedish) <a name="svenska"></a>
 
 ## Automatisk Produktkatalog Generator (V1.1)
 
